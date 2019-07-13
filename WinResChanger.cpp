@@ -29,6 +29,10 @@ int setScreenRes(int width, int height, int bpp, int refreshrate)
 		else printf("Bits-per-pixel not specified, defaulting to 32-bit...");
 		bpp = 32;
 	}
+	if (refreshrate == NULL)
+	{
+		refreshrate = 60;
+	}
 	if (height == NULL || width == NULL)
 	{
 		if (height == NULL)
@@ -71,6 +75,9 @@ int setScreenRes(int width, int height, int bpp, int refreshrate)
 		case DISP_CHANGE_BADMODE:
 			printf("Wrong Width/Height/Color Depth/Refresh Rate specified, check again.\n");
 			break;
+		case DISP_CHANGE_FAILED:
+			printf("Your graphics card does not support this mode.\n");
+			break;
 		}
 		return 1;
 	}
@@ -82,17 +89,25 @@ int main(int argc, char* argv[])
 	{
 		std::cout << "Setting...\nHeight: " << argv[1] << "\n";
 		std::cout << "Width: " << argv[2] << "\n";
-		std::cout << "Color Depth: " << argv[3] << "\n";
-		std::cout << "Refresh Rate:" << argv[4] << "\n";
+		if (argv[3] != NULL) std::cout << "Color Depth: " << argv[3] << "\n";
+		if (argv[4] != NULL) std::cout << "Refresh Rate:" << argv[4] << "\n";
 		int arg1, arg2, arg3, arg4;
+		arg3 = 0;
+		arg4 = 0;
 		std::istringstream iss(argv[1]);
 		iss >> arg1;
 		std::istringstream iss2(argv[2]);
 		iss2 >> arg2;
-		std::istringstream iss3(argv[3]);
-		iss3 >> arg3;
-		std::istringstream iss4(argv[4]);
-		iss4 >> arg4;
+		if (arg3 != NULL)
+		{
+			std::istringstream iss3(argv[3]);
+			iss3 >> arg3;
+		}
+		if (arg4 != NULL)
+		{
+			std::istringstream iss4(argv[4]);
+			iss4 >> arg4;
+		}
 		return setScreenRes(arg1,arg2,arg3,arg4);
 	}
 	int height = GetSystemMetrics(SM_CYSCREEN);
